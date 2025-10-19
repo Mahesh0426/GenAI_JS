@@ -6,15 +6,15 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
 const init = async () => {
-  const pdfFilePath = "./Week7.pdf";
+  const pdfFilePath = "./lecture10.pdf";
 
   //  Load PDF | page by page load the PDF
   const loader = new PDFLoader(pdfFilePath);
   const docs = await loader.load();
 
-  //  Split PDF | chunk
+  //  Split PDF | chunk by 900 characters
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
+    chunkSize: 900,
     chunkOverlap: 100,
   });
   const chunks = await textSplitter.splitDocuments(docs);
@@ -33,9 +33,10 @@ const init = async () => {
     embeddings,
     {
       url: "http://localhost:6333",
-      collectionName: "chaicode-collection",
+      collectionName: "lecture10-collection",
     }
   );
+
   console.log("🚀 Indexing of documents done...");
 };
 
