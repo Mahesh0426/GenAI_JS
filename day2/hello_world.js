@@ -10,6 +10,7 @@ const client = new OpenAI({
 });
 
 const main = async () => {
+  //these api calls are statelesss
   const response = await client.chat.completions.create({
     model: "gpt-4.1-mini",
     messages: [

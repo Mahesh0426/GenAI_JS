@@ -1,4 +1,4 @@
-// gemini openai compatibility
+// COT (Chain of Thought) implementation using OpenAI API
 
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });

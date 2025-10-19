@@ -1,4 +1,4 @@
-// gemini openai compatibility
+// groq openai compatibility
 
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });

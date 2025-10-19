@@ -113,7 +113,6 @@ const main = async () => {
         console.log("🤖", parsed.content);
         return;
     }
-    console.log("Done...");
   }
 };
 
