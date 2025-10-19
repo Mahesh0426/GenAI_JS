@@ -13,7 +13,7 @@ const main = async () => {
   const response = await openai.chat.completions.create({
     model: "gemini-1.5-flash",
     messages: [
-      { role: "system", content: "You are a helpful assistant." },
+      { role: "system", content: "You are a helpful AI  assistant." },
       { role: "user", content: "how are you ?" },
     ],
   });
