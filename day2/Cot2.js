@@ -64,7 +64,7 @@ ${msgs.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join("\n")}
 `;
 
   const res = await gemini.chat.completions.create({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash",
     messages: [{ role: "user", content: promptForGemini }],
     temperature: 0,
   });

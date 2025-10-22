@@ -3,28 +3,35 @@ dotenv.config({ path: "../.env" });
 import { OpenAI } from "openai";
 import axios from "axios";
 
-const API_KEY = process.env.OPENAI_API_KEY;
-
-const getWeatherByCity = async (city = "") => {
-  const url = `https://wttr.in/${city.toLowerCase()}?format=%C+%t`;
-  const { data } = await axios.get(url, { responseType: "text" });
-  return ` the current temperature in ${city} is ${data}`;
-};
-
-// getWeatherByCity("melbourne").then(console.log);
-
-const TOOL_MAP = {
-  getWeatherByCity: getWeatherByCity,
-};
-
 const client = new OpenAI({
-  apiKey: API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
+
+const getGitHubUserInfo = async (username = "") => {
+  const url = `https://api.github.com/users/${username.toLowerCase()}`;
+  const { data } = await axios.get(url);
+  return JSON.stringify({
+    name: data.name,
+    login: data.login,
+    user_view_type: data.user_view_type,
+    location: data.location,
+    public_repos: data.public_repos,
+    public_gists: data.public_gists,
+    followers: data.followers,
+    following: data.following,
+    bio: data.bio,
+  });
+};
+
+//create a TOOL_MAP object to map tool names to their corresponding functions
+const TOOL_MAP = {
+  getGitHubUserInfo: getGitHubUserInfo,
+};
 
 const main = async () => {
   const SYSTEM_PROMPT = `
     You are a  AI assistant who works on START, THINK and OUTPUT format.
-     For a given user query first think and brealdown the probem into sub probelms.
+     For a given user query first think and brealdown the probem into sub problems.
      You should always keep thinking and thinking before giving the actual output.
      Also,before outputing the final result to user you must check once if everyting is correct.
      You have  also list of available tools that you can call based on user query.
@@ -32,12 +39,14 @@ const main = async () => {
      For every tool call that you make, wait for the OBSERVATION from the tool which is the response 
      from the tool that you called.
 
+ 
+
      Available Tools:
-     - getWeatherByCity(city:string): Returns the current weather data of the city.
+     - getGitHubUserInfo(username:string): Returns the public information about the github user using github API.
      
      Rules:
      - Strictly follow the output JSON format.
-     - Always follow the output in sequence that is START → THINK → OBSERVE → TOOL → OUTPUT.
+     - Always follow the output in sequence that is START → THINK → OBSERVE → … → OUTPUT.
      - Always perform only one step at a time. and wait for other step.
      - Always make sure to do multiple step of thinking  before  giving output.
      - for every tool call always wait for the OBSERVE  which contains the output from the tool.
@@ -47,35 +56,52 @@ const main = async () => {
      {"step": "START | THINK |OBSERVE | TOOL | OUTPUT", "content": "string", tool_name: "string", input: "string"}
 
      Example:
-     User: Hey, what is the temperature or weather  in sydney ?
-     ASSISTANT: {"step": "START", "content": "The user is interested in the current weather details about sydney."}
+     User: Hey, what is the github user information of mahesh0426 ?
+     ASSISTANT: {"step": "START", "content": "The user is interested in the  github user information."}
      ASSISTANT: {"step": "THINK", "content": "Let me see if there is any available tool for this query"}
-     ASSISTANT: {"step": "THINK", "content": "I see that there is a tool called getWeatherByCity which returns the current weather data of the city."}
-     ASSISTANT: {"step": "THINK", "content": "I need to call getWeatherByCity for city sydney to get the weather details."}
-     ASSISTANT: {"step": "THINK", "content": "I will call getWeatherByCity for city sydney to get the weather details."}
-     ASSISTANT: {"step": "TOOL", "input": "sydney", tool_name: "getWeatherByCity"}
-     DEVELOPER: {"step": "OBSERVE", "content": "the current weather of sydney is  Rain shower +14 Celsius"}
-     ASSISTANT: {"step": "THINK", "content": "Great! ,I got the weather details of sydney"}
-     ASSISTANT: {"step": "OUTPUT", "content": "the weather of sydney is 14 C with rain shower.Please make sure to carry umbrella with you ☔️."}
+     ASSISTANT: {"step": "THINK", "content": "I see that there is a tool called getGitHubUserInfo which returns the public information about the github user."}
+     ASSISTANT: {"step": "THINK", "content": "I need to call getGitHubUserInfo for github public user to get the user details."}
+     ASSISTANT: {"step": "THINK", "content": "I will call getGitHubUserInfo for github public user to get the public information about the user."}
+     ASSISTANT: {"step": "TOOL", "input": "mahesh0426", tool_name: "getGitHubUserInfo"}
+     DEVELOPER: {"step": "OBSERVE", "content": "the github user  is a software engineer with 10 public repositories and 5 followers."}
+     ASSISTANT: {"step": "THINK", "content": "Great! ,I got the user's github details of mahesh0426"}
+     ASSISTANT: {"step": "OUTPUT", "content": "the github user  is a software engineer with 10 public repositories and 5 followers."}
 
     `;
+
   const messages = [
     { role: "system", content: SYSTEM_PROMPT },
-    { role: "user", content: "what is the weather in kathmandu ?" },
+    {
+      role: "user",
+      content: "hey, Tell me about github user rishisingh1034 ?",
+    },
   ];
 
   while (true) {
+    //response from llm
     const response = await client.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: messages,
     });
+
+    //parse the response
     const rawContent = response.choices[0].message.content;
-    const parsedContent = JSON.parse(rawContent);
+
+    let parsedContent;
+    try {
+      parsedContent = JSON.parse(rawContent);
+    } catch (err) {
+      console.error("Failed to parse JSON from assistant:", rawContent, err);
+      break;
+    }
+
+    //add the parsed content to messages array
     messages.push({
       role: "assistant",
       content: JSON.stringify(parsedContent),
     });
 
+    //handle different steps
     if (parsedContent.step === "START") {
       console.log(`🔥`, parsedContent.content);
       continue;
@@ -113,4 +139,6 @@ const main = async () => {
   console.log("Done...");
 };
 
-main();
+main().catch((err) => {
+  console.error("Error in main:", err);
+});

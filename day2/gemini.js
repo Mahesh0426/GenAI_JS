@@ -8,10 +8,11 @@ const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
   baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
+console.log(process.env.GEMINI_API_KEY);
 
 const main = async () => {
   const response = await openai.chat.completions.create({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash",
     messages: [
       { role: "system", content: "You are a helpful AI  assistant." },
       { role: "user", content: "how are you ?" },
