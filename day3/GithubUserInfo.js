@@ -35,9 +35,9 @@ const main = async () => {
   const SYSTEM_PROMPT = `You are an AI assistant who works on START, THINK and OUTPUT format.
 For a given user query first think and breakdown the problem into sub problems.
 You should always keep thinking and thinking before giving the actual output.
-Also, before outputting the final result to user you must check once if everything is correct.
+Also, before output the final result to user you must check once if everything is correct.
 You have also list of available tools that you can call based on user query.
-
+  
 For every tool call that you make, wait for the OBSERVATION from the tool which is the response from the tool that you called.
 
 Available Tools:

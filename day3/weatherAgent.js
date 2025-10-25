@@ -44,7 +44,7 @@ const main = async () => {
 
 
      Output JSON format:
-     {"step": "START | THINK |OBSERVE | TOOL | OUTPUT", "content": "string", tool_name: "string", input: "string"}
+     {"step": "START | THINK | OBSERVE | TOOL | OUTPUT", "content": "string", tool_name: "string", input: "string"}
 
      Example:
      User: Hey, what is the temperature or weather  in sydney ?
@@ -63,6 +63,7 @@ const main = async () => {
     { role: "system", content: SYSTEM_PROMPT },
     { role: "user", content: "what is the weather in kathmandu ?" },
   ];
+  // console.log("messages", messages);
 
   while (true) {
     const response = await client.chat.completions.create({
@@ -70,12 +71,19 @@ const main = async () => {
       messages: messages,
     });
     const rawContent = response.choices[0].message.content;
+    // console.log("💬 Raw Content:", rawContent);
+
+    //convert raw content to json
     const parsedContent = JSON.parse(rawContent);
+    // console.log("🚀 Parsed Content:", parsedContent);
+
+    //push assistant response to messages array
     messages.push({
       role: "assistant",
       content: JSON.stringify(parsedContent),
     });
 
+    //handle different steps
     if (parsedContent.step === "START") {
       console.log(`🔥`, parsedContent.content);
       continue;
@@ -86,6 +94,8 @@ const main = async () => {
     }
     if (parsedContent.step === "TOOL") {
       const toolToCall = parsedContent.tool_name;
+
+      //check if tool exists
       if (!TOOL_MAP[toolToCall]) {
         messages.push({
           role: "developer",
@@ -93,11 +103,15 @@ const main = async () => {
         });
         continue;
       }
+
+      //if tool exists call the tool
       const responseFromTool = await TOOL_MAP[toolToCall](parsedContent.input);
       console.log(
         `🛠️:${toolToCall}(${parsedContent.input}) = `,
         responseFromTool
       );
+
+      //push the observation to messages array
       messages.push({
         role: "developer",
         content: JSON.stringify({ step: "OBSERVE", content: responseFromTool }),
