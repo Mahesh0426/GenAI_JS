@@ -14,7 +14,7 @@ const init = async () => {
 
   //  Split PDF | chunk by 900 characters
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 900,
+    chunkSize: 1000,
     chunkOverlap: 100,
   });
   const chunks = await textSplitter.splitDocuments(docs);

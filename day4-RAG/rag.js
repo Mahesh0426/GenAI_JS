@@ -13,7 +13,8 @@ const client = new OpenAI({
 });
 
 const chat = async () => {
-  const userQuery = " what are the advantage of Outsourcing Project Work";
+  const userQuery =
+    " Can you explain the impact situational factors have on project team development ?";
 
   //  OpenAI Embeddings Model | text to vector
   const embeddings = new OpenAIEmbeddings({
@@ -55,7 +56,7 @@ const chat = async () => {
 
   // Create a chat completion
   const response = await client.chat.completions.create({
-    model: "deepseek-r1-distill-llama-70b",
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: userQuery },
