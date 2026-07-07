@@ -1,5 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "../.env" });
+// import dotenv from "dotenv";
+// dotenv.config({ path: "../.env" });
+import "dotenv/config"; // this  from run root directory - node day3-Agents/miniCursorAgent.js
 import { OpenAI } from "openai";
 import axios from "axios";
 import { exec } from "child_process";
@@ -115,7 +116,7 @@ const main = async () => {
       const responseFromTool = await TOOL_MAP[toolToCall](parseContent.input);
       console.log(
         `🛠️:${toolToCall}(${parseContent.input}) = `,
-        responseFromTool
+        responseFromTool,
       );
 
       //push observation to messages array

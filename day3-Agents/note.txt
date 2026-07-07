@@ -1,0 +1,18 @@
+Schedule:
+- 8:00 AM: Wake up and freshen up
+- 8:30 AM: Go to the gym
+- 10:00 AM: Return from gym and take a shower
+- 10:30 AM: Get fresh and eat breakfast
+
+Grocery List:
+- Buy rice
+- Buy potatoes
+- Buy apples
+
+Gym Routine (6 days, excluding Monday):
+- Tuesday: Biceps + Back
+- Wednesday: Chest + Triceps
+- Thursday: Legs + Abs
+- Friday: Shoulders + Cardio
+- Saturday: Full Body Workout
+- Sunday: Rest or Light Activity

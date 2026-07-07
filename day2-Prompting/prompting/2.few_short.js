@@ -1,10 +1,5 @@
-// open AI SDK.
-// adding system prompt
-// few shot prompting
-
-import dotenv from "dotenv";
-dotenv.config({ path: "../.env" });
 import { OpenAI } from "openai";
+import "dotenv/config";
 
 const API_KEY = process.env.OPENAI_API_KEY;
 
@@ -14,7 +9,7 @@ const client = new OpenAI({
 
 const main = async () => {
   const response = await client.chat.completions.create({
-    model: "gpt-4.1-mini",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
@@ -40,19 +35,21 @@ const main = async () => {
       {
         role: "user",
         content:
-          "i want to buy shoe which shoe can you recommend me i likw nike shoe and my size is 8 men ?.",
+          "i want to buy shoe which shoe can you recommend me i like nike shoe and my size is 8 men ?.",
       },
     ],
-    stream: true,
+    // stream: true,
     max_tokens: 100,
   });
-  //   console.log(response.choices[0].message.content);
+
+  // normal response
+  console.log(response.choices[0].message.content);
 
   // ← streaming output
-  for await (const part of response) {
-    const delta = part.choices[0]?.delta?.content;
-    if (delta) process.stdout.write(delta);
-  }
+  // for await (const part of response) {
+  //   const delta = part.choices[0]?.delta?.content;
+  //   if (delta) process.stdout.write(delta);
+  // }
 };
 
 main();

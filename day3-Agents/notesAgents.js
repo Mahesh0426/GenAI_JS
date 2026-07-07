@@ -19,6 +19,10 @@ const rl = readline.createInterface({
 const ask = (question) => {
   return new Promise((resolve) => {
     rl.question(question, (answer) => resolve(answer.trim()));
+    //new Promise((resolve, reject) => {
+    // async code here
+    //})
+    //rl.question(query, callback)
   });
 };
 

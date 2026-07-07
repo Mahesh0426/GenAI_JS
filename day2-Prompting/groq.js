@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 const main = async () => {
   const response = await openai.chat.completions.create({
-    model: "deepseek-r1-distill-llama-70b",
+    model: "qwen/qwen3-32b",
     messages: [
       { role: "system", content: "You are a helpful assistant." },
       { role: "user", content: "does groq have their own model  ?" },

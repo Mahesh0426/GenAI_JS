@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: ".. /.env" });
 import { Agent, run, tool } from "@openai/agents";
 import { z } from "zod";
 
