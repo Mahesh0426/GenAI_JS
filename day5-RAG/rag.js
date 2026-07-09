@@ -12,10 +12,7 @@ const client = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-const chat = async () => {
-  const userQuery =
-    " Can you explain the impact situational factors have on project team development ?";
-
+const chat = async (userQuery) => {
   //  OpenAI Embeddings Model | text to vector
   const embeddings = new OpenAIEmbeddings({
     model: "text-embedding-3-large",
@@ -27,7 +24,7 @@ const chat = async () => {
     {
       url: "http://localhost:6333",
       collectionName: "lecture10-collection",
-    }
+    },
   );
 
   //perform search on vector store
@@ -37,16 +34,22 @@ const chat = async () => {
   const SYSTEM_PROMPT = `
   You are an AI assistant who helps resolving user query based on the context available to you from a PDF file with the content and page number.
   Provide the source of the information you are using to answer the question.
-  example : [source: lecture10.pdf, page: 1-3]
-
+  
   Only answer based on the available context from file only.
 
-    Context:
-    ${JSON.stringify(relevantChunks)}
+ 
+  User Documents:
+    ${relevantChunks.map((e) => JSON.stringify({ bookName: e.metadata.source, pageContent: e.pageContent, pageNumber: e.metadata.loc.pageNumber })).join("\n\n")}
+
   `;
+
+  // logging the SYSTEM_PROMPT for debugging purposes
+  console.log("🚀 SYSTEM_PROMPT:", SYSTEM_PROMPT);
+
   // const SYSTEM_PROMPT = `
   // You are an AI assistant who helps resolving user query based on the context available to you from a website with metadata.
   // Provide the source of the information you are using to answer the question.
+  // example : [source: lecture10.pdf, page: 1-3]
 
   // Only answer based on the available context from file only.
 
@@ -55,6 +58,7 @@ const chat = async () => {
   // `;
 
   // Create a chat completion
+
   const response = await client.chat.completions.create({
     model: "llama-3.3-70b-versatile",
     messages: [
@@ -67,4 +71,6 @@ const chat = async () => {
   console.log(`>>`, response.choices[0].message.content);
 };
 
-chat();
+// const userQuery = "Can you explain how to build high performance project team ?";
+const userQuery = " what is Multiple-Site Processing ?";
+chat(userQuery);

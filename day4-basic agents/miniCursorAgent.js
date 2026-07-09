@@ -70,10 +70,10 @@ const main = async () => {
     { role: "system", content: SYSTEM_PROMPT },
     {
       role: "user",
-      //   content:
-      //     "Hey, create a folder calculator_app and create a simple calculator application using html, css and js ?",
       content:
-        "can you go to GenAI_JS folde using command cd .. and then from there do git add. and in commit message write githubuserinfo agent and mini cursoe agent created and then do git push  ",
+        "Hey, create a folder todo_app and create a simple todo application using html, css and js ?",
+      //   content:
+      //     "can you go to GenAI_JS folde using command cd .. and then from there do git add. and in commit message write githubuserinfo agent and mini cursoe agent created and then do git push  ",
     },
   ];
 

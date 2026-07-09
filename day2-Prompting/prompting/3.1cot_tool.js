@@ -97,7 +97,12 @@ async function main(prompt = "") {
     });
 
     const rawResult = result.choices[0].message.content;
-    const parsedResult = JSON.parse(rawResult);
+
+    const cleaned = rawResult
+      .replace(/^```[a-z]*\n?/i, "")
+      .replace(/```$/, "")
+      .trim();
+    const parsedResult = JSON.parse(cleaned);
 
     MESSAGES_DB.push({ role: "assistant", content: rawResult });
 
