@@ -36,7 +36,7 @@ const getMenuTool = tool({
     };
     // return `Today's menu items are: Drinks - Coke: ${menuItems.drinks.coke}, Pepsi: ${menuItems.drinks.pepsi}; Pizza - Margherita: ${menuItems.pizza.margherita}, Pepperoni: ${menuItems.pizza.pepperoni}`;
     return `Today's menu items are: Drinks - ${JSON.stringify(
-      menuItems.drinks
+      menuItems.drinks,
     )}; Pizza - ${JSON.stringify(menuItems.pizza)}`;
   },
 });
@@ -61,5 +61,5 @@ const chatWithAgent = async (query) => {
 };
 
 chatWithAgent(
-  "Depending on the current time, whare are food options in sydney also what items are available in the menu?"
+  "Depending on the current time, whare are food options in sydney also what items are available in the menu?",
 );
